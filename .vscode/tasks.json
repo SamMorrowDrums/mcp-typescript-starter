@@ -1,16 +1,37 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "shell",
-			"label": "TypeScript Watch",
-			"command": "npm run watch",
-			"group": "build",
-			"isBackground": true,
-			"problemMatcher": [
-				"$tsc"
-			],
-			"args": []
-		}
-	]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "npm run build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Watch",
+      "type": "shell",
+      "command": "npm run dev",
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": ["$tsc-watch"]
+    },
+    {
+      "label": "Start (stdio)",
+      "type": "shell",
+      "command": "npm run start:stdio",
+      "group": "test",
+      "dependsOn": "Build"
+    },
+    {
+      "label": "Start (HTTP)",
+      "type": "shell",
+      "command": "npm run start:http",
+      "group": "test",
+      "dependsOn": "Build"
+    }
+  ]
 }

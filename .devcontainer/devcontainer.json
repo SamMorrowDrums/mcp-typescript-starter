@@ -1,22 +1,25 @@
 {
   "name": "MCP TypeScript Starter",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
-  "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "lts"
-    }
-  },
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22",
+  "features": {},
+  "postCreateCommand": "npm install",
   "customizations": {
     "vscode": {
-      "settings": {},
       "extensions": [
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "ms-vscode.vscode-typescript-next"
-      ]
+      ],
+      "settings": {
+        "typescript.tsdk": "node_modules/typescript/lib"
+      }
     }
   },
-  "postCreateCommand": "npm install && npm run build || true",
   "forwardPorts": [3000],
-  "remoteUser": "vscode"
+  "portsAttributes": {
+    "3000": {
+      "label": "MCP HTTP Server",
+      "onAutoForward": "notify"
+    }
+  }
 }
