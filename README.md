@@ -127,14 +127,7 @@ The [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) is an 
 ### Running Inspector
 
 ```bash
-# Install the MCP Inspector globally (one-time)
-npm install -g @modelcontextprotocol/inspector
-
-# Run inspector with your server (stdio)
-npx @modelcontextprotocol/inspector npm run start:stdio
-
-# Or use npx directly
-npx @modelcontextprotocol/inspector node dist/stdio.js
+npx @modelcontextprotocol/inspector -- npx tsx src/stdio.ts
 ```
 
 ### What Inspector Provides
