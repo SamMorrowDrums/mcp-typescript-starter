@@ -56,17 +56,17 @@ For more information, visit: https://modelcontextprotocol.io`,
 }
 
 /**
- * Markdown file resource.
+ * Markdown document resource.
  */
 function registerExampleDocument(server: McpServer): void {
   server.resource(
     'Example Document',
-    'file://example.md',
+    'doc://example',
     { description: 'An example markdown document', mimeType: 'text/markdown' },
     async () => ({
       contents: [
         {
-          uri: 'file://example.md',
+          uri: 'doc://example',
           mimeType: 'text/markdown',
           text: `# Example Document
 
