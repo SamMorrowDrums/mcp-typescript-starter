@@ -16,6 +16,20 @@ jobs:
     with:
       install_command: "npm ci"
       build_command: "npm run build"
-      start_command: "node dist/stdio.js"
       setup_node: true
       node_version: "20"
+      configurations: |
+        [
+          {
+            "name": "stdio",
+            "transport": "stdio",
+            "start_command": "node dist/stdio.js"
+          },
+          {
+            "name": "http",
+            "transport": "http",
+            "start_command": "node dist/http.js",
+            "server_url": "http://localhost:3000/mcp",
+            "health_endpoint": "/health"
+          }
+        ]
