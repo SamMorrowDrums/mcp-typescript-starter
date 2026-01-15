@@ -1,0 +1,21 @@
+name: Conformance Test
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    uses: SamMorrowDrums/mcp-conformance-action/.github/workflows/conformance.yml@main
+    with:
+      install_command: "npm ci"
+      build_command: "npm run build"
+      start_command: "node dist/stdio.js"
+      setup_node: true
+      node_version: "20"
