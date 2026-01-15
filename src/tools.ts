@@ -210,7 +210,9 @@ function registerLoadBonusTool(server: McpServer): void {
         {
           a: z.number().describe('First number'),
           b: z.number().describe('Second number'),
-          operation: z.enum(['add', 'subtract', 'multiply', 'divide']).describe('Mathematical operation'),
+          operation: z
+            .enum(['add', 'subtract', 'multiply', 'divide'])
+            .describe('Mathematical operation'),
         },
         {
           title: 'Bonus Calculator',

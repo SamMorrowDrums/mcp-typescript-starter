@@ -2,6 +2,21 @@
 
 This file provides context for AI coding agents working in this repository.
 
+## Quick Reference
+
+| Task | Command |
+|------|---------|
+| Install | `npm ci` |
+| Build | `npm run build` |
+| Test | `npm test` |
+| Lint | `npm run lint` |
+| Lint fix | `npm run lint:fix` |
+| Format | `npm run format` |
+| Format check | `npm run format:check` |
+| Run (stdio) | `npm run start:stdio` |
+| Run (HTTP) | `npm run start:http` |
+| Dev mode | `npm run dev` |
+
 ## Project Overview
 
 **MCP TypeScript Starter** is a feature-complete Model Context Protocol (MCP) server template in TypeScript. It demonstrates all major MCP features including tools, resources, resource templates, prompts, sampling, progress updates, and dynamic tool loading.
@@ -10,12 +25,14 @@ This file provides context for AI coding agents working in this repository.
 
 ## Technology Stack
 
-- **Runtime**: Node.js 20+
+- **Runtime**: Node.js >=20.0.0
 - **Language**: TypeScript 5.5+ (ESM)
 - **MCP SDK**: `@modelcontextprotocol/sdk`
 - **Schema Validation**: Zod
 - **HTTP Server**: Express
-- **Package Manager**: npm
+- **Package Manager**: npm (use `npm ci` for reproducible installs)
+- **Formatter**: Prettier
+- **Linter**: ESLint
 
 ## Project Structure
 
