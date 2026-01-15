@@ -29,7 +29,6 @@ jobs:
             "name": "http",
             "transport": "http",
             "start_command": "node dist/http.js",
-            "server_url": "http://localhost:3000/mcp",
-            "health_endpoint": "/health"
+            "server_url": "http://localhost:3000/mcp"
           }
         ]
