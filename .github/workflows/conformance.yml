@@ -19,14 +19,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
       - uses: SamMorrowDrums/mcp-conformance-action@v1
         with:
-          install_command: "npm ci"
-          build_command: "npm run build"
+          setup_node: true
+          node_version: '22'
+          install_command: npm ci
+          build_command: npm run build
           configurations: |
             [
               {
