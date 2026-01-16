@@ -13,23 +13,31 @@ permissions:
 
 jobs:
   conformance:
-    uses: SamMorrowDrums/mcp-conformance-action/.github/workflows/conformance.yml@v1
-    with:
-      install_command: "npm ci"
-      build_command: "npm run build"
-      setup_node: true
-      node_version: "20"
-      configurations: |
-        [
-          {
-            "name": "stdio",
-            "transport": "stdio",
-            "start_command": "node dist/stdio.js"
-          },
-          {
-            "name": "streamable-http",
-            "transport": "streamable-http",
-            "start_command": "node dist/http.js",
-            "server_url": "http://localhost:3000/mcp"
-          }
-        ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: SamMorrowDrums/mcp-conformance-action@v1
+        with:
+          install_command: "npm ci"
+          build_command: "npm run build"
+          configurations: |
+            [
+              {
+                "name": "stdio",
+                "transport": "stdio",
+                "start_command": "node dist/stdio.js"
+              },
+              {
+                "name": "streamable-http",
+                "transport": "streamable-http",
+                "start_command": "node dist/http.js",
+                "server_url": "http://localhost:3000/mcp"
+              }
+            ]
