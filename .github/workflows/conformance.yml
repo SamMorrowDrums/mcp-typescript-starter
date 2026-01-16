@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   conformance:
-    uses: SamMorrowDrums/mcp-conformance-action/.github/workflows/conformance.yml@v1.0.1
+    uses: SamMorrowDrums/mcp-conformance-action/.github/workflows/conformance.yml@v1.1.1
     with:
       install_command: "npm ci"
       build_command: "npm run build"
