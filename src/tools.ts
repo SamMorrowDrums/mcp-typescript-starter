@@ -31,6 +31,7 @@ export function registerTools(server: McpServer): void {
   registerLoadBonusTool(server);
   registerConfirmActionTool(server);
   registerGetFeedbackTool(server);
+  registerEchoTool(server);
 }
 
 /**
@@ -421,5 +422,28 @@ function registerGetFeedbackTool(server: McpServer): void {
         };
       }
     }
+  );
+}
+
+/**
+ * Simple echo tool for testing conformance diffs.
+ */
+function registerEchoTool(server: McpServer): void {
+  server.tool(
+    'echo',
+    'Echo back the provided message',
+    {
+      message: z.string().describe('The message to echo back'),
+    },
+    {
+      title: 'Echo',
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+    async ({ message }) => ({
+      content: [{ type: 'text', text: message }],
+    })
   );
 }
