@@ -434,6 +434,7 @@ function registerEchoTool(server: McpServer): void {
     'Echo back the provided message',
     {
       message: z.string().describe('The message to echo back'),
+      uppercase: z.boolean().optional().describe('Convert message to uppercase'),
     },
     {
       title: 'Echo',
@@ -442,8 +443,8 @@ function registerEchoTool(server: McpServer): void {
       idempotentHint: true,
       openWorldHint: false,
     },
-    async ({ message }) => ({
-      content: [{ type: 'text', text: message }],
+    async ({ message, uppercase }) => ({
+      content: [{ type: 'text', text: uppercase ? message.toUpperCase() : message }],
     })
   );
 }
