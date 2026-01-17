@@ -19,12 +19,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: SamMorrowDrums/mcp-conformance-action@v2.2.0
+      - uses: SamMorrowDrums/mcp-conformance-action@v2.3.0
         with:
           setup_node: true
           node_version: '22'
           install_command: npm ci
           build_command: npm run build
+          http_start_command: node dist/http.js
           configurations: |
             [
               {
@@ -35,7 +36,6 @@ jobs:
               {
                 "name": "streamable-http",
                 "transport": "streamable-http",
-                "start_command": "node dist/http.js",
                 "server_url": "http://localhost:3000/mcp"
               }
             ]
