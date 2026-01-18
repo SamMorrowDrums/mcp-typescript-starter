@@ -42,7 +42,7 @@ async function main() {
       }
 
       const transport = transports.get(sessionId)!;
-      await transport.handleRequest(req, res);
+      await transport.handleRequest(req, res, req.body);
       return;
     }
 
@@ -75,7 +75,7 @@ async function main() {
         }
       }
 
-      await transport.handleRequest(req, res);
+      await transport.handleRequest(req, res, req.body);
       return;
     }
 
