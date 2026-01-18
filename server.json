@@ -1,0 +1,30 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "mcp-typescript-starter",
+  "description": "A TypeScript MCP server template demonstrating tools, prompts, and resources",
+  "title": "MCP TypeScript Starter",
+  "repository": {
+    "url": "https://github.com/SamMorrowDrums/mcp-typescript-starter",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "mcp-typescript-starter",
+      "transport": {
+        "type": "stdio"
+      },
+      "runtimeHint": "node",
+      "runtime": "node",
+      "command": ["npx", "-y", "mcp-typescript-starter"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "http://localhost:3000/mcp",
+      "description": "Local HTTP server (run `npm run http` first)"
+    }
+  ]
+}
