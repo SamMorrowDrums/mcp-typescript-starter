@@ -68,14 +68,15 @@ async function main() {
         };
 
         await server.connect(transport);
-
-        if (transport.sessionId) {
-          transports.set(transport.sessionId, transport);
-          console.log(`New session: ${transport.sessionId}`);
-        }
       }
 
       await transport.handleRequest(req, res, req.body);
+
+      // Store the transport after handleRequest so sessionId is set
+      if (transport.sessionId && !transports.has(transport.sessionId)) {
+        transports.set(transport.sessionId, transport);
+        console.log(`New session: ${transport.sessionId}`);
+      }
       return;
     }
 
