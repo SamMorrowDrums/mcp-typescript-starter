@@ -21,7 +21,6 @@ const ITEMS_DATA: Record<string, { name: string; description: string }> = {
  */
 export function registerResources(server: McpServer): void {
   registerAboutResource(server);
-  registerExampleDocument(server);
   registerGreetingTemplate(server);
   registerItemsTemplate(server);
 }
@@ -49,44 +48,6 @@ This is a feature-complete MCP server demonstrating:
 - Sampling, progress updates, and dynamic tool loading
 
 For more information, visit: https://modelcontextprotocol.io`,
-        },
-      ],
-    })
-  );
-}
-
-/**
- * Markdown document resource.
- */
-function registerExampleDocument(server: McpServer): void {
-  server.resource(
-    'Example Document',
-    'doc://example',
-    { description: 'An example markdown document', mimeType: 'text/markdown' },
-    async () => ({
-      contents: [
-        {
-          uri: 'doc://example',
-          mimeType: 'text/markdown',
-          text: `# Example Document
-
-This is an example markdown document served as an MCP resource.
-
-## Features
-
-- **Bold text** and *italic text*
-- Lists and formatting
-- Code blocks
-
-\`\`\`typescript
-const hello = "world";
-\`\`\`
-
-## Links
-
-- [MCP Documentation](https://modelcontextprotocol.io)
-- [TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
-`,
         },
       ],
     })

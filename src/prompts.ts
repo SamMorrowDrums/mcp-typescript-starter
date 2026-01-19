@@ -24,7 +24,7 @@ export function registerPrompts(server: McpServer): void {
 function registerGreetPrompt(server: McpServer): void {
   server.prompt(
     'greet',
-    'Generate a greeting in a specific style',
+    'Generate a personalized greeting message with customizable style',
     {
       name: z.string().describe('Name of the person to greet'),
       style: z.string().optional().describe('The greeting style (formal, casual, enthusiastic)'),
