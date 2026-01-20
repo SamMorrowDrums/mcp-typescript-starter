@@ -1,0 +1,41 @@
+name: MCP Server Diff
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  mcp-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: SamMorrowDrums/mcp-server-diff@v2.3.0
+        with:
+          setup_node: true
+          node_version: '22'
+          install_command: npm ci
+          build_command: npm run build
+          http_start_command: node dist/http.js
+          configurations: |
+            [
+              {
+                "name": "stdio",
+                "transport": "stdio",
+                "start_command": "node dist/stdio.js"
+              },
+              {
+                "name": "streamable-http",
+                "transport": "streamable-http",
+                "server_url": "http://localhost:3000/mcp"
+              }
+            ]
