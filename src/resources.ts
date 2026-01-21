@@ -32,12 +32,12 @@ export function registerResources(server: McpServer): void {
 function registerAboutResource(server: McpServer): void {
   server.resource(
     'About',
-    'info://about',
+    'about://server',
     { description: 'Information about this MCP server', mimeType: 'text/plain' },
     async () => ({
       contents: [
         {
-          uri: 'info://about',
+          uri: 'about://server',
           mimeType: 'text/plain',
           text: `MCP TypeScript Starter v1.0.0
 
@@ -62,12 +62,12 @@ function registerExampleDocument(server: McpServer): void {
   server.resource(
     'Example Document',
     'doc://example',
-    { description: 'An example markdown document', mimeType: 'text/markdown' },
+    { description: 'An example document resource', mimeType: 'text/plain' },
     async () => ({
       contents: [
         {
           uri: 'doc://example',
-          mimeType: 'text/markdown',
+          mimeType: 'text/plain',
           text: `# Example Document
 
 This is an example markdown document served as an MCP resource.
@@ -100,7 +100,7 @@ function registerGreetingTemplate(server: McpServer): void {
   server.resource(
     'Personalized Greeting',
     new ResourceTemplate('greeting://{name}', { list: undefined }),
-    { description: 'Generate a personalized greeting', mimeType: 'text/plain' },
+    { description: 'A personalized greeting for a specific person', mimeType: 'text/plain' },
     async (uri, { name }) => ({
       contents: [
         {
@@ -119,8 +119,8 @@ function registerGreetingTemplate(server: McpServer): void {
 function registerItemsTemplate(server: McpServer): void {
   server.resource(
     'Item Data',
-    new ResourceTemplate('data://items/{id}', { list: undefined }),
-    { description: 'Get data for a specific item by ID', mimeType: 'application/json' },
+    new ResourceTemplate('item://{id}', { list: undefined }),
+    { description: 'Data for a specific item by ID', mimeType: 'application/json' },
     async (uri, { id }) => {
       const item = ITEMS_DATA[id as string];
       if (!item) {

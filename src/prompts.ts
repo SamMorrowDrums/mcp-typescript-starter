@@ -19,21 +19,25 @@ export function registerPrompts(server: McpServer): void {
 }
 
 /**
- * Greeting prompt with style options.
+ * Greeting prompt.
+ *
+ * NOTE: Zod schemas in TypeScript cannot add "title" metadata to individual properties,
+ * only "description". This is a language/library limitation. Properties will have:
+ * - ✓ description (via .describe())
+ * - ✗ title (not supported in Zod v4)
  */
 function registerGreetPrompt(server: McpServer): void {
   server.prompt(
     'greet',
-    'Generate a greeting in a specific style',
+    'Generate a greeting message',
     {
       name: z.string().describe('Name of the person to greet'),
-      style: z.string().optional().describe('The greeting style (formal, casual, enthusiastic)'),
+      style: z.string().optional().describe('Greeting style (formal/casual)'),
     },
     async ({ name, style }) => {
       const styles: Record<string, string> = {
         formal: `Please compose a formal, professional greeting for ${name}.`,
         casual: `Write a casual, friendly hello to ${name}.`,
-        enthusiastic: `Create an excited, enthusiastic greeting for ${name}!`,
       };
 
       const text = styles[style || 'casual'] || styles.casual;
@@ -46,33 +50,24 @@ function registerGreetPrompt(server: McpServer): void {
 }
 
 /**
- * Code review prompt with focus areas.
+ * Code review prompt.
+ *
+ * NOTE: Zod schemas in TypeScript cannot add "title" metadata to individual properties,
+ * only "description". This is a language/library limitation. Properties will have:
+ * - ✓ description (via .describe())
+ * - ✗ title (not supported in Zod v4)
  */
 function registerCodeReviewPrompt(server: McpServer): void {
   server.prompt(
     'code_review',
-    'Request a code review with specific focus areas',
+    'Review code for potential improvements',
     {
       code: z.string().describe('The code to review'),
-      language: z.string().describe('Programming language'),
-      focus: z
-        .string()
-        .optional()
-        .describe('What to focus on (security, performance, readability, all)'),
     },
-    async ({ code, language, focus }) => {
-      const focusInstructions: Record<string, string> = {
-        security: 'Focus on security vulnerabilities and potential exploits.',
-        performance: 'Focus on performance optimizations and efficiency issues.',
-        readability: 'Focus on code clarity, naming, and maintainability.',
-        all: 'Provide a comprehensive review covering security, performance, and readability.',
-      };
+    async ({ code }) => {
+      const text = `Please review the following code for potential improvements, security issues, performance optimizations, and readability:
 
-      const instruction = focusInstructions[focus || 'all'] || focusInstructions.all;
-
-      const text = `Please review the following ${language} code. ${instruction}
-
-\`\`\`${language}
+\`\`\`
 ${code}
 \`\`\``;
 
