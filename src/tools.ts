@@ -200,7 +200,7 @@ function registerLongTaskTool(server: McpServer): void {
 function registerLoadBonusTool(server: McpServer): void {
   server.tool(
     'load_bonus_tool',
-    "Dynamically loads a bonus tool that wasn't available at startup",
+    "Dynamically register a new bonus tool",
     {},
     {
       title: 'Load Bonus Tool',
