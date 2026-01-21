@@ -27,12 +27,15 @@ export function registerPrompts(server: McpServer): void {
  * - ✗ title (not supported in Zod v4)
  */
 function registerGreetPrompt(server: McpServer): void {
-  server.prompt(
+  server.registerPrompt(
     'greet',
-    'Generate a greeting message',
     {
-      name: z.string().describe('Name of the person to greet'),
-      style: z.string().optional().describe('Greeting style (formal/casual)'),
+      title: 'Greeting Prompt',
+      description: 'Generate a greeting message',
+      argsSchema: {
+        name: z.string().describe('Name of the person to greet'),
+        style: z.string().optional().describe('Greeting style (formal/casual)'),
+      },
     },
     async ({ name, style }) => {
       const styles: Record<string, string> = {
@@ -58,11 +61,14 @@ function registerGreetPrompt(server: McpServer): void {
  * - ✗ title (not supported in Zod v4)
  */
 function registerCodeReviewPrompt(server: McpServer): void {
-  server.prompt(
+  server.registerPrompt(
     'code_review',
-    'Review code for potential improvements',
     {
-      code: z.string().describe('The code to review'),
+      title: 'Code Review',
+      description: 'Review code for potential improvements',
+      argsSchema: {
+        code: z.string().describe('The code to review'),
+      },
     },
     async ({ code }) => {
       const text = `Please review the following code for potential improvements, security issues, performance optimizations, and readability:
