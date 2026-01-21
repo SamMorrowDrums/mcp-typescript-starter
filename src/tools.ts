@@ -184,7 +184,10 @@ function registerLongTaskTool(server: McpServer): void {
 
       return {
         content: [
-          { type: 'text', text: `Task "${taskName}" completed successfully after ${numSteps} steps!` },
+          {
+            type: 'text',
+            text: `Task "${taskName}" completed successfully after ${numSteps} steps!`,
+          },
         ],
       };
     }
@@ -296,7 +299,11 @@ function registerConfirmActionTool(server: McpServer): void {
     'Request user confirmation before proceeding',
     {
       action: z.string().describe('Description of the action to confirm'),
-      destructive: z.boolean().optional().default(false).describe('Whether the action is destructive'),
+      destructive: z
+        .boolean()
+        .optional()
+        .default(false)
+        .describe('Whether the action is destructive'),
     },
     {
       title: 'Confirm Action',
@@ -434,5 +441,3 @@ function registerGetFeedbackTool(server: McpServer): void {
     }
   );
 }
-
-

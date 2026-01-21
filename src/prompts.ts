@@ -20,7 +20,7 @@ export function registerPrompts(server: McpServer): void {
 
 /**
  * Greeting prompt.
- * 
+ *
  * NOTE: Zod schemas in TypeScript cannot add "title" metadata to individual properties,
  * only "description". This is a language/library limitation. Properties will have:
  * - ✓ description (via .describe())
@@ -51,7 +51,7 @@ function registerGreetPrompt(server: McpServer): void {
 
 /**
  * Code review prompt.
- * 
+ *
  * NOTE: Zod schemas in TypeScript cannot add "title" metadata to individual properties,
  * only "description". This is a language/library limitation. Properties will have:
  * - ✓ description (via .describe())
