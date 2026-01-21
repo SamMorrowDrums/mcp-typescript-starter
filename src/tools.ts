@@ -12,6 +12,17 @@
  * - idempotentHint: Repeated calls with same args have same effect
  * - openWorldHint: Tool accesses external systems (web, APIs, etc.)
  *
+ * ## Schema Conventions
+ *
+ * NOTE: TypeScript implementation uses Zod for schema validation. Zod v4 only
+ * supports `description` for properties, not `title`. This is a language/library
+ * limitation compared to other MCP implementations (Python, Go, etc.) that can
+ * provide both title and description in JSON schemas.
+ *
+ * All tool parameters will have:
+ * - ✓ description (via .describe())
+ * - ✗ title (not supported in Zod v4)
+ *
  * @see https://modelcontextprotocol.io/docs/concepts/tools
  */
 
@@ -31,7 +42,6 @@ export function registerTools(server: McpServer): void {
   registerLoadBonusTool(server);
   registerConfirmActionTool(server);
   registerGetFeedbackTool(server);
-  registerEchoTool(server);
 }
 
 /**
@@ -40,9 +50,9 @@ export function registerTools(server: McpServer): void {
 function registerHelloTool(server: McpServer): void {
   server.tool(
     'hello',
-    'A friendly greeting tool that says hello to someone',
+    'Say hello to a person',
     {
-      name: z.string().describe('The name to greet'),
+      name: z.string().describe('Name of the person to greet'),
     },
     {
       title: 'Say Hello',
@@ -63,9 +73,9 @@ function registerHelloTool(server: McpServer): void {
 function registerWeatherTool(server: McpServer): void {
   server.tool(
     'get_weather',
-    'Get current weather for a location (simulated)',
+    'Get the current weather for a city',
     {
-      location: z.string().describe('City name or coordinates'),
+      city: z.string().describe('City name to get weather for'),
     },
     {
       title: 'Get Weather',
@@ -74,9 +84,9 @@ function registerWeatherTool(server: McpServer): void {
       idempotentHint: false, // Results vary due to simulation
       openWorldHint: false, // Simulated, not real external calls
     },
-    async ({ location }) => {
+    async ({ city }) => {
       const weather = {
-        location,
+        location: city,
         temperature: Math.round(15 + Math.random() * 20),
         unit: 'celsius',
         conditions: ['sunny', 'cloudy', 'rainy', 'windy'][Math.floor(Math.random() * 4)],
@@ -99,7 +109,7 @@ function registerAskLlmTool(server: McpServer): void {
     'ask_llm',
     'Ask the connected LLM a question using sampling',
     {
-      prompt: z.string().describe('The question or prompt for the LLM'),
+      prompt: z.string().describe('The question or prompt to send to the LLM'),
       maxTokens: z.number().optional().default(100).describe('Maximum tokens in response'),
     },
     {
@@ -145,9 +155,10 @@ function registerAskLlmTool(server: McpServer): void {
 function registerLongTaskTool(server: McpServer): void {
   server.tool(
     'long_task',
-    'A task that takes 5 seconds and reports progress along the way',
+    'Simulate a long-running task with progress updates',
     {
       taskName: z.string().describe('Name for this task'),
+      steps: z.number().optional().default(5).describe('Number of steps to simulate'),
     },
     {
       title: 'Long Running Task',
@@ -156,15 +167,15 @@ function registerLongTaskTool(server: McpServer): void {
       idempotentHint: true,
       openWorldHint: false,
     },
-    async ({ taskName }, extra) => {
-      const steps = 5;
+    async ({ taskName, steps }, extra) => {
+      const numSteps = steps ?? 5;
 
-      for (let i = 0; i < steps; i++) {
+      for (let i = 0; i < numSteps; i++) {
         await extra.sendNotification({
           method: 'notifications/progress',
           params: {
             progressToken: 'long_task',
-            progress: i / steps,
+            progress: i / numSteps,
             total: 1.0,
           },
         });
@@ -173,7 +184,7 @@ function registerLongTaskTool(server: McpServer): void {
 
       return {
         content: [
-          { type: 'text', text: `Task "${taskName}" completed successfully after ${steps} steps!` },
+          { type: 'text', text: `Task "${taskName}" completed successfully after ${numSteps} steps!` },
         ],
       };
     }
@@ -282,9 +293,10 @@ function registerLoadBonusTool(server: McpServer): void {
 function registerConfirmActionTool(server: McpServer): void {
   server.tool(
     'confirm_action',
-    'Demonstrates elicitation - requests user confirmation before proceeding',
+    'Request user confirmation before proceeding',
     {
-      action: z.string().describe('The action to confirm with the user'),
+      action: z.string().describe('Description of the action to confirm'),
+      destructive: z.boolean().optional().default(false).describe('Whether the action is destructive'),
     },
     {
       title: 'Confirm Action',
@@ -293,13 +305,14 @@ function registerConfirmActionTool(server: McpServer): void {
       idempotentHint: false, // User response varies
       openWorldHint: false,
     },
-    async ({ action }) => {
+    async ({ action, destructive }) => {
       try {
         // Form elicitation: Display a structured form with typed fields
         // The client renders this as a dialog/form based on the JSON schema
+        const warningText = destructive ? ' (WARNING: This action is destructive!)' : '';
         const result = await server.server.elicitInput({
           mode: 'form',
-          message: `Please confirm: ${action}`,
+          message: `Please confirm: ${action}${warningText}`,
           requestedSchema: {
             type: 'object',
             properties: {
@@ -359,9 +372,9 @@ function registerConfirmActionTool(server: McpServer): void {
 function registerGetFeedbackTool(server: McpServer): void {
   server.tool(
     'get_feedback',
-    'Demonstrates URL elicitation - opens a feedback form in the browser',
+    'Request feedback from the user',
     {
-      topic: z.string().optional().describe('Optional topic for the feedback'),
+      question: z.string().describe('The question to ask the user'),
     },
     {
       title: 'Get Feedback',
@@ -370,20 +383,17 @@ function registerGetFeedbackTool(server: McpServer): void {
       idempotentHint: false, // User response varies
       openWorldHint: true, // Opens external URL
     },
-    async ({ topic }) => {
-      let feedbackUrl =
-        'https://github.com/SamMorrowDrums/mcp-starters/issues/new?template=workshop-feedback.yml';
-      if (topic) {
-        feedbackUrl += `&title=${encodeURIComponent(topic)}`;
-      }
+    async ({ question }) => {
+      const feedbackUrl =
+        'https://github.com/SamMorrowDrums/mcp-starters/issues/new?template=workshop-feedback.yml&title=' +
+        encodeURIComponent(question);
 
       try {
         // URL elicitation: Open a web page in the user's browser
         // Useful for OAuth flows, external forms, documentation links, etc.
         const result = await server.server.elicitInput({
           mode: 'url',
-          message:
-            'Please provide feedback on MCP Starters by completing the form at the URL below:',
+          message: `Please answer this question: ${question}`,
           elicitationId: `feedback-${Date.now()}`,
           url: feedbackUrl,
         });
@@ -393,7 +403,7 @@ function registerGetFeedbackTool(server: McpServer): void {
             content: [
               {
                 type: 'text',
-                text: 'Thank you for providing feedback! Your input helps improve MCP Starters.',
+                text: 'Thank you for providing your answer!',
               },
             ],
           };
@@ -402,7 +412,7 @@ function registerGetFeedbackTool(server: McpServer): void {
             content: [
               {
                 type: 'text',
-                text: `No problem! Feel free to provide feedback anytime at: ${feedbackUrl}`,
+                text: `No problem! You can answer the question anytime at: ${feedbackUrl}`,
               },
             ],
           };
@@ -416,7 +426,7 @@ function registerGetFeedbackTool(server: McpServer): void {
           content: [
             {
               type: 'text',
-              text: `URL elicitation not supported or failed: ${error instanceof Error ? error.message : 'Unknown error'}\n\nYou can still provide feedback at: ${feedbackUrl}`,
+              text: `URL elicitation not supported or failed: ${error instanceof Error ? error.message : 'Unknown error'}\n\nYou can still answer at: ${feedbackUrl}`,
             },
           ],
         };
@@ -425,25 +435,4 @@ function registerGetFeedbackTool(server: McpServer): void {
   );
 }
 
-/**
- * Simple echo tool for testing conformance diffs.
- */
-function registerEchoTool(server: McpServer): void {
-  server.tool(
-    'echo',
-    'Echo back the provided message',
-    {
-      message: z.string().describe('The message to echo back'),
-    },
-    {
-      title: 'Echo',
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: true,
-      openWorldHint: false,
-    },
-    async ({ message }) => ({
-      content: [{ type: 'text', text: message }],
-    })
-  );
-}
+
