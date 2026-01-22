@@ -23,6 +23,18 @@
  * - ✓ description (via .describe())
  * - ✗ title (not supported in Zod v4)
  *
+ * ## Implementation Notes
+ *
+ * ### Schema Differences from Python Reference
+ * - TypeScript SDK automatically adds `$schema` field to inputSchema (SDK behavior)
+ * - Property `title` fields not supported (Zod v4 limitation)
+ * - `outputSchema` is supported via registerTool() method
+ * - Icons can be added via _meta field (not yet implemented)
+ *
+ * ### Task Support
+ * - TypeScript SDK may add `execution.taskSupport: forbidden` to tools (SDK default)
+ * - This indicates tools run synchronously and don't support task-based execution
+ *
  * @see https://modelcontextprotocol.io/docs/concepts/tools
  */
 
@@ -71,18 +83,27 @@ function registerHelloTool(server: McpServer): void {
  * Weather tool with structured output.
  */
 function registerWeatherTool(server: McpServer): void {
-  server.tool(
+  server.registerTool(
     'get_weather',
-    'Get the current weather for a city',
-    {
-      city: z.string().describe('City name to get weather for'),
-    },
     {
       title: 'Get Weather',
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: false, // Results vary due to simulation
-      openWorldHint: false, // Simulated, not real external calls
+      description: 'Get the current weather for a city',
+      inputSchema: {
+        city: z.string().describe('City name to get weather for'),
+      },
+      outputSchema: {
+        location: z.string(),
+        temperature: z.number(),
+        unit: z.string(),
+        conditions: z.string(),
+        humidity: z.number(),
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false, // Results vary due to simulation
+        openWorldHint: false, // Simulated, not real external calls
+      },
     },
     async ({ city }) => {
       const weather = {
@@ -218,23 +239,29 @@ function registerLoadBonusTool(server: McpServer): void {
         };
       }
 
-      // Register the bonus calculator with inline annotations
-      server.tool(
+      // Register the bonus calculator with inline annotations and outputSchema
+      server.registerTool(
         'bonus_calculator',
-        'A calculator that was dynamically loaded',
-        {
-          a: z.number().describe('First number'),
-          b: z.number().describe('Second number'),
-          operation: z
-            .enum(['add', 'subtract', 'multiply', 'divide'])
-            .describe('Mathematical operation'),
-        },
         {
           title: 'Bonus Calculator',
-          readOnlyHint: true,
-          destructiveHint: false,
-          idempotentHint: true,
-          openWorldHint: false,
+          description: 'A calculator that was dynamically loaded',
+          inputSchema: {
+            a: z.number().describe('First number'),
+            b: z.number().describe('Second number'),
+            operation: z
+              .enum(['add', 'subtract', 'multiply', 'divide'])
+              .describe('Mathematical operation'),
+          },
+          outputSchema: {
+            result: z.number(),
+            operation: z.string(),
+          },
+          annotations: {
+            readOnlyHint: true,
+            destructiveHint: false,
+            idempotentHint: true,
+            openWorldHint: false,
+          },
         },
         async ({ a, b, operation }) => {
           const ops: Record<string, number> = {
@@ -243,8 +270,10 @@ function registerLoadBonusTool(server: McpServer): void {
             multiply: a * b,
             divide: b !== 0 ? a / b : NaN,
           };
+          const result = ops[operation];
           return {
-            content: [{ type: 'text', text: `${a} ${operation} ${b} = ${ops[operation]}` }],
+            content: [{ type: 'text', text: `${a} ${operation} ${b} = ${result}` }],
+            structuredContent: { result, operation },
           };
         }
       );

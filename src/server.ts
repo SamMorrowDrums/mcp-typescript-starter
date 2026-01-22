@@ -74,6 +74,14 @@ Use these hints to make informed decisions about tool usage.
 
 /**
  * Creates and configures the MCP server with all features.
+ *
+ * ## Capabilities Alignment with Python Reference
+ *
+ * This server's capabilities are aligned with the Python reference implementation:
+ * - `experimental: {}` - Included to match Python reference
+ * - `resources.subscribe: false` - Explicitly set (not yet implemented)
+ * - `tools: {}` - Standard tools capability
+ * - `prompts: {}` - Standard prompts capability
  */
 export function createServer(): McpServer {
   const server = new McpServer(
@@ -84,8 +92,11 @@ export function createServer(): McpServer {
     {
       capabilities: {
         tools: {},
-        resources: {},
+        resources: {
+          subscribe: false,
+        },
         prompts: {},
+        experimental: {},
       },
       instructions: SERVER_INSTRUCTIONS,
     }
