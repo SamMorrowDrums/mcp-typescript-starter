@@ -60,18 +60,20 @@ export function registerTools(server: McpServer): void {
  * Basic greeting tool with annotations.
  */
 function registerHelloTool(server: McpServer): void {
-  server.tool(
+  server.registerTool(
     'hello',
-    'Say hello to a person',
-    {
-      name: z.string().describe('Name of the person to greet'),
-    },
     {
       title: 'Say Hello',
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: true,
-      openWorldHint: false,
+      description: 'Say hello to a person',
+      inputSchema: {
+        name: z.string().describe('Name of the person to greet'),
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
     },
     async ({ name }) => ({
       content: [{ type: 'text', text: `Hello, ${name}! Welcome to MCP.` }],
@@ -126,19 +128,21 @@ function registerWeatherTool(server: McpServer): void {
  * Tool that invokes LLM sampling.
  */
 function registerAskLlmTool(server: McpServer): void {
-  server.tool(
+  server.registerTool(
     'ask_llm',
-    'Ask the connected LLM a question using sampling',
-    {
-      prompt: z.string().describe('The question or prompt to send to the LLM'),
-      maxTokens: z.number().optional().default(100).describe('Maximum tokens in response'),
-    },
     {
       title: 'Ask LLM',
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: false, // LLM responses vary
-      openWorldHint: false, // Uses connected client, not external
+      description: 'Ask the connected LLM a question using sampling',
+      inputSchema: {
+        prompt: z.string().describe('The question or prompt to send to the LLM'),
+        maxTokens: z.number().optional().default(100).describe('Maximum tokens in response'),
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false, // LLM responses vary
+        openWorldHint: false, // Uses connected client, not external
+      },
     },
     async ({ prompt, maxTokens }) => {
       try {
@@ -174,19 +178,21 @@ function registerAskLlmTool(server: McpServer): void {
  * Long-running task with progress updates.
  */
 function registerLongTaskTool(server: McpServer): void {
-  server.tool(
+  server.registerTool(
     'long_task',
-    'Simulate a long-running task with progress updates',
-    {
-      taskName: z.string().describe('Name for this task'),
-      steps: z.number().optional().default(5).describe('Number of steps to simulate'),
-    },
     {
       title: 'Long Running Task',
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: true,
-      openWorldHint: false,
+      description: 'Simulate a long-running task with progress updates',
+      inputSchema: {
+        taskName: z.string().describe('Name for this task'),
+        steps: z.number().optional().default(5).describe('Number of steps to simulate'),
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
     },
     async ({ taskName, steps }, extra) => {
       const numSteps = steps ?? 5;
@@ -219,16 +225,18 @@ function registerLongTaskTool(server: McpServer): void {
  * Tool that dynamically loads another tool at runtime.
  */
 function registerLoadBonusTool(server: McpServer): void {
-  server.tool(
+  server.registerTool(
     'load_bonus_tool',
-    'Dynamically register a new bonus tool',
-    {},
     {
       title: 'Load Bonus Tool',
-      readOnlyHint: false,
-      destructiveHint: false,
-      idempotentHint: true, // Loading twice is safe
-      openWorldHint: false,
+      description: 'Dynamically register a new bonus tool',
+      inputSchema: {},
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true, // Loading twice is safe
+        openWorldHint: false,
+      },
     },
     async (_args, extra) => {
       if (bonusToolLoaded) {
@@ -323,23 +331,25 @@ function registerLoadBonusTool(server: McpServer): void {
  * Tool that demonstrates form elicitation - requests user confirmation.
  */
 function registerConfirmActionTool(server: McpServer): void {
-  server.tool(
+  server.registerTool(
     'confirm_action',
-    'Request user confirmation before proceeding',
-    {
-      action: z.string().describe('Description of the action to confirm'),
-      destructive: z
-        .boolean()
-        .optional()
-        .default(false)
-        .describe('Whether the action is destructive'),
-    },
     {
       title: 'Confirm Action',
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: false, // User response varies
-      openWorldHint: false,
+      description: 'Request user confirmation before proceeding',
+      inputSchema: {
+        action: z.string().describe('Description of the action to confirm'),
+        destructive: z
+          .boolean()
+          .optional()
+          .default(false)
+          .describe('Whether the action is destructive'),
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false, // User response varies
+        openWorldHint: false,
+      },
     },
     async ({ action, destructive }) => {
       try {
@@ -406,18 +416,20 @@ function registerConfirmActionTool(server: McpServer): void {
  * Tool that demonstrates URL elicitation - opens feedback form in browser.
  */
 function registerGetFeedbackTool(server: McpServer): void {
-  server.tool(
+  server.registerTool(
     'get_feedback',
-    'Request feedback from the user',
-    {
-      question: z.string().describe('The question to ask the user'),
-    },
     {
       title: 'Get Feedback',
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: false, // User response varies
-      openWorldHint: true, // Opens external URL
+      description: 'Request feedback from the user',
+      inputSchema: {
+        question: z.string().describe('The question to ask the user'),
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false, // User response varies
+        openWorldHint: true, // Opens external URL
+      },
     },
     async ({ question }) => {
       const feedbackUrl =
