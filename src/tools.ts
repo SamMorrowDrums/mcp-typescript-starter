@@ -247,7 +247,7 @@ function registerLoadBonusTool(server: McpServer): void {
         };
       }
 
-      // Register the bonus calculator with inline annotations and outputSchema
+      // Register the bonus calculator with structured configuration and outputSchema
       server.registerTool(
         'bonus_calculator',
         {
