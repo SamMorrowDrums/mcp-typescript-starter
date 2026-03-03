@@ -33,24 +33,24 @@ A demonstration MCP server showcasing TypeScript SDK capabilities.
 ### LLM Interaction
 - **ask_llm**: Invoke LLM sampling to ask questions (requires client support)
 
-### Elicitation Tools
-- **confirm_action**: Request user confirmation via form elicitation
-- **get_feedback**: Request feedback via URL elicitation (opens browser)
-
 ### Dynamic Features
 - **load_bonus_tool**: Dynamically adds a calculator tool at runtime
 - **bonus_calculator**: Available after calling load_bonus_tool
 
+### Elicitation (User Input)
+- **confirm_action**: Demonstrates schema elicitation - requests user confirmation
+- **get_feedback**: Demonstrates URL elicitation - opens feedback form in browser
+
 ## Available Resources
 
-- **about://server**: Information about this MCP server
-- **doc://example**: An example markdown document
-- **greeting://{name}**: Personalized greeting template (e.g., greeting://Alice)
-- **item://{id}**: Item data by ID (e.g., item://1, item://2, item://3)
+- **about://server**: Server information
+- **doc://example**: Sample markdown document
+- **greeting://{name}**: Personalized greeting template
+- **item://{id}**: Item data by ID
 
 ## Available Prompts
 
-- **greet**: Generates a personalized greeting
+- **greeting**: Generates a personalized greeting
 - **code_review**: Structured code review prompt
 
 ## Recommended Workflows
@@ -59,8 +59,8 @@ A demonstration MCP server showcasing TypeScript SDK capabilities.
 2. **Weather Demo**: Call \`get_weather\` with a location to see structured output
 3. **Progress Demo**: Call \`long_task\` to see progress notifications
 4. **Dynamic Loading**: Call \`load_bonus_tool\`, then refresh tools to see \`bonus_calculator\`
-5. **Elicitation Demo**: Call \`confirm_action\` to see form-based user confirmation
-6. **URL Elicitation**: Call \`get_feedback\` to see URL-based elicitation
+5. **Elicitation Demo**: Call \`confirm_action\` to see user confirmation flow
+6. **URL Elicitation**: Call \`get_feedback\` to open a feedback form
 
 ## Tool Annotations
 
