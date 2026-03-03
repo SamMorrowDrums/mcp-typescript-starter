@@ -80,7 +80,7 @@ Use these hints to make informed decisions about tool usage.
  * This server's capabilities are aligned with the Python reference implementation:
  * - `experimental: {}` - Included to match Python reference
  * - `resources.subscribe: false` - Explicitly set (not yet implemented)
- * - `tools: {}` - Standard tools capability
+ * - `tools.listChanged: true` - Dynamic tools via load_bonus_tool
  * - `prompts: {}` - Standard prompts capability
  */
 export function createServer(): McpServer {
@@ -91,7 +91,7 @@ export function createServer(): McpServer {
     },
     {
       capabilities: {
-        tools: {},
+        tools: { listChanged: true },
         resources: {
           subscribe: false,
         },
