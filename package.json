@@ -33,13 +33,13 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.9.0",
     "typescript": "^6.0.3",
-    "eslint": "^10.2.1",
+    "eslint": "^10.4.0",
     "@eslint/js": "^10.0.1",
-    "typescript-eslint": "^8.59.0",
+    "typescript-eslint": "^8.59.4",
     "prettier": "^3.8.3",
-    "tsx": "^4.19.0"
+    "tsx": "^4.22.2"
   },
   "engines": {
     "node": ">=20.0.0"
