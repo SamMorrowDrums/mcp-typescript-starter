@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/sammorrowdrums-mcp-typescript-starter-badge.png)](https://mseep.ai/app/sammorrowdrums-mcp-typescript-starter)
+
 # MCP TypeScript Starter
 
 [![CI](https://github.com/SamMorrowDrums/mcp-typescript-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/SamMorrowDrums/mcp-typescript-starter/actions/workflows/ci.yml)
