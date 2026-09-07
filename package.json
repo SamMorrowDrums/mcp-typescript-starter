@@ -28,7 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
-    "zod": "^4.4.3",
+    "zod": "^4.5.4",
     "express": "^5.2.1"
   },
   "devDependencies": {
