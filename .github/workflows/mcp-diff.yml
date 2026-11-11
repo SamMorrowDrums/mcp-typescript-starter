@@ -22,7 +22,7 @@ jobs:
       - uses: SamMorrowDrums/mcp-server-diff@v3
         with:
           setup_node: true
-          node_version: '22'
+          node_version: '24'
           install_command: npm ci
           build_command: npm run build
           http_start_command: node dist/http.js

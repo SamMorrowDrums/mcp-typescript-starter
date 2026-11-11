@@ -25,7 +25,7 @@ This file provides context for AI coding agents working in this repository.
 
 ## Technology Stack
 
-- **Runtime**: Node.js >=20.0.0
+- **Runtime**: Node.js >=24.0.0 (CI covers Node 24 and 26; `@types/node` targets Node 24)
 - **Language**: TypeScript 5.5+ (ESM)
 - **MCP SDK**: `@modelcontextprotocol/sdk`
 - **Schema Validation**: Zod
