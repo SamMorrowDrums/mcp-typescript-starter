@@ -12,7 +12,7 @@
  * @see https://modelcontextprotocol.io/docs/develop/transports#stdio
  */
 
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { StdioServerTransport } from '@modelcontextprotocol/server/stdio';
 import { createServer } from './server.js';
 
 async function main() {

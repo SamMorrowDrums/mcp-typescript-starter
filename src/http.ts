@@ -13,7 +13,7 @@
  */
 
 import express from 'express';
-import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { NodeStreamableHTTPServerTransport } from '@modelcontextprotocol/node';
 import { createServer } from './server.js';
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
@@ -25,7 +25,7 @@ async function main() {
   app.use(express.json());
 
   // Store transports for session management
-  const transports = new Map<string, StreamableHTTPServerTransport>();
+  const transports = new Map<string, NodeStreamableHTTPServerTransport>();
 
   /**
    * MCP endpoint - handles all MCP protocol messages
@@ -48,14 +48,14 @@ async function main() {
 
     if (req.method === 'POST') {
       // Handle new sessions or existing session messages
-      let transport: StreamableHTTPServerTransport;
+      let transport: NodeStreamableHTTPServerTransport;
 
       if (sessionId && transports.has(sessionId)) {
         transport = transports.get(sessionId)!;
       } else {
         // Create new session
         const server = createServer();
-        transport = new StreamableHTTPServerTransport({
+        transport = new NodeStreamableHTTPServerTransport({
           sessionIdGenerator: () => crypto.randomUUID(),
         });
 

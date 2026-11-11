@@ -7,7 +7,7 @@
  * @see https://modelcontextprotocol.io/docs/concepts/prompts
  */
 
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { McpServer } from '@modelcontextprotocol/server';
 import { z } from 'zod';
 
 /**
@@ -32,10 +32,10 @@ function registerGreetPrompt(server: McpServer): void {
     {
       title: 'Greeting Prompt',
       description: 'Generate a greeting message',
-      argsSchema: {
+      argsSchema: z.object({
         name: z.string().describe('Name of the person to greet'),
         style: z.string().optional().describe('Greeting style (formal/casual)'),
-      },
+      }),
     },
     async ({ name, style }) => {
       const styles: Record<string, string> = {
@@ -66,9 +66,9 @@ function registerCodeReviewPrompt(server: McpServer): void {
     {
       title: 'Code Review',
       description: 'Review code for potential improvements',
-      argsSchema: {
+      argsSchema: z.object({
         code: z.string().describe('The code to review'),
-      },
+      }),
     },
     async ({ code }) => {
       const text = `Please review the following code for potential improvements, security issues, performance optimizations, and readability:

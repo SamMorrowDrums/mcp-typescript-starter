@@ -7,7 +7,7 @@
  * @see https://modelcontextprotocol.io/docs/concepts/resources
  */
 
-import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { McpServer, ResourceTemplate } from '@modelcontextprotocol/server';
 
 /** Example data for dynamic resources */
 const ITEMS_DATA: Record<string, { name: string; description: string }> = {
@@ -30,7 +30,7 @@ export function registerResources(server: McpServer): void {
  * Static "about" resource with server information.
  */
 function registerAboutResource(server: McpServer): void {
-  server.resource(
+  server.registerResource(
     'About',
     'about://server',
     { description: 'Information about this MCP server', mimeType: 'text/plain' },
@@ -59,7 +59,7 @@ For more information, visit: https://modelcontextprotocol.io`,
  * Markdown document resource.
  */
 function registerExampleDocument(server: McpServer): void {
-  server.resource(
+  server.registerResource(
     'Example Document',
     'doc://example',
     { description: 'An example document resource', mimeType: 'text/plain' },
@@ -97,7 +97,7 @@ const hello = "world";
  * Template for personalized greetings.
  */
 function registerGreetingTemplate(server: McpServer): void {
-  server.resource(
+  server.registerResource(
     'Personalized Greeting',
     new ResourceTemplate('greeting://{name}', { list: undefined }),
     { description: 'A personalized greeting for a specific person', mimeType: 'text/plain' },
@@ -117,7 +117,7 @@ function registerGreetingTemplate(server: McpServer): void {
  * Template for item data lookup.
  */
 function registerItemsTemplate(server: McpServer): void {
-  server.resource(
+  server.registerResource(
     'Item Data',
     new ResourceTemplate('item://{id}', { list: undefined }),
     { description: 'Data for a specific item by ID', mimeType: 'application/json' },
