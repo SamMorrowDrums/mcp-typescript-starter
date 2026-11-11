@@ -47,13 +47,12 @@ A demonstration MCP server showcasing TypeScript SDK capabilities.
 /**
  * Creates and configures the MCP server with all features.
  *
- * ## Capabilities Alignment with Python Reference
+ * ## Capability Support
  *
- * This server's capabilities are aligned with the Python reference implementation:
- * - `experimental: {}` - Included to match Python reference
- * - `resources.subscribe: false` - Explicitly set (not yet implemented)
- * - `tools.listChanged: true` - Dynamic tools via load_bonus_tool
- * - `prompts: {}` - Standard prompts capability
+ * - `tools.listChanged: true` because `load_bonus_tool` registers a tool at runtime.
+ * - `resources.subscribe: false` because resource subscriptions and update notifications are not implemented.
+ * - `resources.listChanged` is omitted because resource registrations are fixed at startup.
+ * - `prompts: {}` because this server registers prompts.
  */
 export function createServer(): McpServer {
   const server = new McpServer(
@@ -68,7 +67,6 @@ export function createServer(): McpServer {
           subscribe: false,
         },
         prompts: {},
-        experimental: {},
       },
       instructions: SERVER_INSTRUCTIONS,
     }
