@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/SamMorrowDrums/mcp-typescript-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/SamMorrowDrums/mcp-typescript-starter/actions/workflows/ci.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-24%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-purple)](https://modelcontextprotocol.io/)
 
@@ -34,7 +34,7 @@ A feature-complete Model Context Protocol (MCP) server template in TypeScript. T
 
 ### Prerequisites
 
-- [Node.js 20+](https://nodejs.org/)
+- [Node.js 24+](https://nodejs.org/) (CI covers Node 24 and 26; Node.js types target the Node 24 minimum)
 - npm or pnpm
 
 ### Installation
