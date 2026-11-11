@@ -38,7 +38,7 @@
  * @see https://modelcontextprotocol.io/docs/concepts/tools
  */
 
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { McpServer } from '@modelcontextprotocol/server';
 import { z } from 'zod';
 
 let bonusToolLoaded = false;
@@ -65,9 +65,9 @@ function registerHelloTool(server: McpServer): void {
     {
       title: 'Say Hello',
       description: 'Say hello to a person',
-      inputSchema: {
+      inputSchema: z.object({
         name: z.string().describe('Name of the person to greet'),
-      },
+      }),
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -90,16 +90,16 @@ function registerWeatherTool(server: McpServer): void {
     {
       title: 'Get Weather',
       description: 'Get the current weather for a city',
-      inputSchema: {
+      inputSchema: z.object({
         city: z.string().describe('City name to get weather for'),
-      },
-      outputSchema: {
+      }),
+      outputSchema: z.object({
         location: z.string(),
         temperature: z.number(),
         unit: z.string(),
         conditions: z.string(),
         humidity: z.number(),
-      },
+      }),
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -133,10 +133,10 @@ function registerAskLlmTool(server: McpServer): void {
     {
       title: 'Ask LLM',
       description: 'Ask the connected LLM a question using sampling',
-      inputSchema: {
+      inputSchema: z.object({
         prompt: z.string().describe('The question or prompt to send to the LLM'),
         maxTokens: z.number().optional().default(100).describe('Maximum tokens in response'),
-      },
+      }),
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -183,10 +183,10 @@ function registerLongTaskTool(server: McpServer): void {
     {
       title: 'Long Running Task',
       description: 'Simulate a long-running task with progress updates',
-      inputSchema: {
+      inputSchema: z.object({
         taskName: z.string().describe('Name for this task'),
         steps: z.number().optional().default(5).describe('Number of steps to simulate'),
-      },
+      }),
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -194,11 +194,11 @@ function registerLongTaskTool(server: McpServer): void {
         openWorldHint: false,
       },
     },
-    async ({ taskName, steps }, extra) => {
+    async ({ taskName, steps }, ctx) => {
       const numSteps = steps ?? 5;
 
       for (let i = 0; i < numSteps; i++) {
-        await extra.sendNotification({
+        await ctx.mcpReq.notify({
           method: 'notifications/progress',
           params: {
             progressToken: 'long_task',
@@ -230,7 +230,7 @@ function registerLoadBonusTool(server: McpServer): void {
     {
       title: 'Load Bonus Tool',
       description: 'Dynamically register a new bonus tool',
-      inputSchema: {},
+      inputSchema: z.object({}),
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
@@ -238,7 +238,7 @@ function registerLoadBonusTool(server: McpServer): void {
         openWorldHint: false,
       },
     },
-    async (_args, extra) => {
+    async (_args, ctx) => {
       if (bonusToolLoaded) {
         return {
           content: [
@@ -253,17 +253,17 @@ function registerLoadBonusTool(server: McpServer): void {
         {
           title: 'Bonus Calculator',
           description: 'A calculator that was dynamically loaded',
-          inputSchema: {
+          inputSchema: z.object({
             a: z.number().describe('First number'),
             b: z.number().describe('Second number'),
             operation: z
               .enum(['add', 'subtract', 'multiply', 'divide'])
               .describe('Mathematical operation'),
-          },
-          outputSchema: {
+          }),
+          outputSchema: z.object({
             result: z.number(),
             operation: z.string(),
-          },
+          }),
           annotations: {
             readOnlyHint: true,
             destructiveHint: false,
@@ -289,7 +289,7 @@ function registerLoadBonusTool(server: McpServer): void {
       bonusToolLoaded = true;
 
       // Notify clients that the tools list has changed
-      await extra.sendNotification({
+      await ctx.mcpReq.notify({
         method: 'notifications/tools/list_changed',
         params: {},
       });
@@ -336,14 +336,14 @@ function registerConfirmActionTool(server: McpServer): void {
     {
       title: 'Confirm Action',
       description: 'Request user confirmation before proceeding',
-      inputSchema: {
+      inputSchema: z.object({
         action: z.string().describe('Description of the action to confirm'),
         destructive: z
           .boolean()
           .optional()
           .default(false)
           .describe('Whether the action is destructive'),
-      },
+      }),
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -421,9 +421,9 @@ function registerGetFeedbackTool(server: McpServer): void {
     {
       title: 'Get Feedback',
       description: 'Request feedback from the user',
-      inputSchema: {
+      inputSchema: z.object({
         question: z.string().describe('The question to ask the user'),
-      },
+      }),
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
